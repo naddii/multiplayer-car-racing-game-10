@@ -8,6 +8,7 @@ class Game {
     this.leader1 = createElement("h2");
     this.leader2 = createElement("h2");
     this.playerMoving = false;
+    this.leftkeyactive=false
   }
 
   getState() {
@@ -158,7 +159,7 @@ class Game {
 
           this.handleFuel(index);
           this.handlePowerCoins(index);
-          
+          this.handleObstacleCollsion(index)
           // Changing camera position in y direction
           camera.position.x = cars[index - 1].position.x;
           camera.position.y = cars[index - 1].position.y;
@@ -217,7 +218,14 @@ class Game {
       this.gameOver();
     }
   }
-
+handleObstacleCollision(index){
+if(cars[index-1].collide(obstacle1)){
+  if(player.life>0){
+    player.life-=185/4
+  }
+  player.update()
+  
+}
   handlePowerCoins(index) {
     cars[index - 1].overlap(powerCoins, function(collector, collected) {
       player.score += 21;
@@ -301,11 +309,13 @@ handlePlayerControls() {
   }
 
   if (keyIsDown(LEFT_ARROW) && player.positionX > width / 3 - 50) {
+    this.leftkeyactive=true
     player.positionX -= 5;
     player.update();
   }
 
   if (keyIsDown(RIGHT_ARROW) && player.positionX < width / 2 + 300) {
+    this.leftkeyactive=false
     player.positionX += 5;
     player.update();
   }
